@@ -4,6 +4,7 @@
 
 class EntityManager;
 class Player;
+class Map;
 
 class Game
 {
@@ -13,6 +14,9 @@ public:
 private:
 	std::shared_ptr<EntityManager> entityManager;
 	std::shared_ptr<Player> player;
+	std::shared_ptr<Map> map;
+
+	bool isFullscreen;
 
 public:
 	Game(glm::vec2 aWindowSize, std::string name);
@@ -20,5 +24,8 @@ public:
 	std::shared_ptr<EntityManager> getEntityManager() const;
 
 	void run();
+
+private:
+	void toggleFullscreen();
 };
 

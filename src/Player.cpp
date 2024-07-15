@@ -29,3 +29,19 @@ sf::FloatRect Player::getBounds()
 {
 	return circle.getGlobalBounds();
 }
+
+void Player::setPosition(const float x, const float y)
+{
+	circle.setPosition(x, y);
+}
+
+void Player::setPosition(const glm::vec2 position)
+{
+	circle.setPosition(position.x, position.y);
+}
+
+glm::vec2 Player::getPosition() const
+{
+	sf::Vector2f position = circle.getPosition();
+	return glm::vec2(position.x, position.y);
+}

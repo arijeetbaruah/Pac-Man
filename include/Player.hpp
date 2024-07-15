@@ -17,6 +17,9 @@ public:
 	void handleInput(sf::Event& event) override;
 	void update(sf::Time& elapsed) override;
 	void render() override;
+	void setPosition(const float x, const float y) override;
+	void setPosition(const glm::vec2 position) override;
+	glm::vec2 getPosition() const override;
 
 	// Inherited via BaseCollider
 	void onCollision(std::shared_ptr<BaseCollider> entity) override;
