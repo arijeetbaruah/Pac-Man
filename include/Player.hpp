@@ -5,11 +5,23 @@
 #include <SFML/Graphics.hpp>
 #include <glm/vec2.hpp>
 
+enum MovementDirection {
+	UP = 0,
+	DOWN,
+	LEFT,
+	RIGHT
+};
+
 class Player : public BaseEntity, public BaseCollider
 {
 private:
-	sf::CircleShape circle;
+	sf::Sprite sprite;
+	sf::Texture texture;
 
+	MovementDirection direction;
+	std::map<MovementDirection, std::vector<sf::IntRect>> animations;
+	float animationTimer;
+	size_t animationIndex;
 public:
 	Player(Game* game);
 
@@ -24,4 +36,7 @@ public:
 	// Inherited via BaseCollider
 	void onCollision(std::shared_ptr<BaseCollider> entity) override;
 	sf::FloatRect getBounds() override;
+
+private:
+	void initializeAnimation();
 };

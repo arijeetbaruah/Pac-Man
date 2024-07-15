@@ -33,7 +33,7 @@ void Map::load(const std::string& filename)
                 wallRect.setSize(sf::Vector2f(TILE_SIZE, TILE_SIZE));
                 walls.push_back(wallRect);
             }
-            else {
+            else if (map[y][x] == 'P') {
                 playerPosition = glm::vec2(x * TILE_SIZE + windowSize.x / 4, y * TILE_SIZE);
             }
         }
