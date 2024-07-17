@@ -1,10 +1,12 @@
 #include "../include/Player.hpp"
 #include "../include/EntityManager.hpp"
 #include "../include/Game.hpp"
+#include "../include/Map.hpp"
 #include <Windows.h>
 #include <math.h>
 #include "../assets/resource.h"
 #include "../include/loadTextureFromResource.hpp"
+#include <spdlog/spdlog.h>
 
 Player::Player(Game* game) : BaseEntity(game), direction(MovementDirection::RIGHT), animationTimer(0), animationIndex(0)
 {
@@ -13,6 +15,7 @@ Player::Player(Game* game) : BaseEntity(game), direction(MovementDirection::RIGH
 	initializeAnimation();
 
 	sprite.setTextureRect(animations[direction][animationIndex]);
+	sprite.setScale(0.9f, 0.9f);
 }
 
 void Player::handleInput(sf::Event& event)
@@ -37,6 +40,7 @@ void Player::render()
 
 void Player::onCollision(std::shared_ptr<BaseCollider> entity)
 {
+	
 }
 
 sf::FloatRect Player::getBounds()

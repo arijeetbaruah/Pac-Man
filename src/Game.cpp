@@ -49,7 +49,6 @@ void Game::run()
         entityManager->update(elapsed);
 
         window.clear();
-        map->render();
         entityManager->render();
         window.display();
     }
