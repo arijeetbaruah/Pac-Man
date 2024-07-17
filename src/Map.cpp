@@ -1,13 +1,14 @@
 #include "../include/Map.hpp"
 #include "../include/Game.hpp"
 #include "../include/EntityManager.hpp"
+#include "../include/AStar.hpp"
 
 #include <fstream>
 #include <vector>
 #include <string>
 #include <iostream>
 
-Map::Map(Game* aGame): game(aGame), mapSize(0,0), playerPosition(0, 0)
+Map::Map(Game* aGame): game(aGame), mapSize(0,0), playerPosition(0, 0), aStar(std::make_shared<AStar>())
 {
 }
 
@@ -27,17 +28,21 @@ void Map::load(const std::string& filename)
     mapSize.y = map[0].length();
 
     for (size_t y = 0; y < map.size(); ++y) {
+        std::vector<int> row;
         for (size_t x = 0; x < map[y].length(); ++x) {
             std::shared_ptr<MapNode> mapNode;
             if (map[y][x] == '#') {
                 mapNode = std::make_shared<MapNode>(game, true, glm::vec2(x, y));
+                row.push_back(0);
             }
             else if (map[y][x] == 'P') {
                 mapNode = std::make_shared<MapNode>(game, false, glm::vec2(x, y));
                 playerPosition = glm::vec2(x * TILE_WIDTH + windowSize.x / 4, y * TILE_HEIGHT);
+                row.push_back(1);
             }
             else {
                 mapNode = std::make_shared<MapNode>(game, false, glm::vec2(x, y));
+                row.push_back(1);
             }
             walls.push_back(mapNode);
             game->getEntityManager()->addEntity(mapNode);
@@ -53,6 +58,11 @@ glm::vec2 Map::getMapSize() const
 glm::vec2 Map::getPlayerPosition() const
 {
     return playerPosition - glm::vec2(0, 2);
+}
+
+std::shared_ptr<AStar> Map::getAStar() const
+{
+    return aStar;
 }
 
 //glm::vec2 Map::getGridFromPosition(const glm::vec2 grid) const

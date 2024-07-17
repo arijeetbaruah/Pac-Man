@@ -8,6 +8,7 @@ const int TILE_WIDTH = 32;
 const int TILE_HEIGHT = 35;
 
 class Game;
+class AStar;
 
 class MapNode : public BaseEntity, public BaseCollider {
 private:
@@ -39,9 +40,12 @@ private:
 
 	std::vector<std::string> map;
 	std::vector<std::shared_ptr<MapNode>> walls;
+	std::vector<std::vector<int>> mapGrid;
 
 	glm::vec2 mapSize;
 	glm::vec2 playerPosition;
+
+	std::shared_ptr<AStar> aStar;
 
 public:
 	Map(Game* game);
@@ -49,5 +53,7 @@ public:
 
 	glm::vec2 getMapSize() const;
 	glm::vec2 getPlayerPosition() const;
+
+	std::shared_ptr<AStar> getAStar() const;
 };
 
