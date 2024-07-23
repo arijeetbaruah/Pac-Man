@@ -8,11 +8,11 @@ include(FetchContent)
 FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 2.6.x)
-FetchContent_MakeAvailable(SFML)
+FetchContent_Declare(GLM
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG 1.0.1)
+FetchContent_MakeAvailable(SFML GLM)
 
-set(glm_DIR ${CMAKE_BINARY_DIR}/../plugins/glm/lib/cmake/glm)
-
-add_subdirectory(plugins/glm)
 add_subdirectory(plugins/spdlog)
 
 file(GLOB_RECURSE HEADERS "include/*.h")
