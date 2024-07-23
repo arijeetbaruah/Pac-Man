@@ -96,11 +96,11 @@ std::shared_ptr<AStar> Map::getAStar() const
     return aStar;
 }
 
-//glm::vec2 Map::getGridFromPosition(const glm::vec2 grid) const
-//{
-//    sf::Vector2u windowSize = game->window.getSize();
-//    return glm::vec2((grid.x - windowSize.x / 4) / TILE_WIDTH, grid.y / TILE_HEIGHT);
-//}
+glm::vec2 Map::getGridFromPosition(const glm::vec2 grid) const
+{
+    sf::Vector2u windowSize = game->window.getSize();
+    return glm::vec2((grid.x - windowSize.x / 4) / TILE_WIDTH, grid.y / TILE_HEIGHT);
+}
 
 MapNode::MapNode(Game* aGame, bool aIsWall, glm::vec2 aPosition): BaseEntity(aGame), game(aGame), position(aPosition)
 {

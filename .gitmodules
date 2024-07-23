@@ -1,0 +1,3 @@
+[submodule "plugins/glm"]
+	path = plugins/glm
+	url = https://github.com/g-truc/glm.git
