@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <glm/vec2.hpp>
+#include <memory>
 
 class EntityManager;
 class Player;
