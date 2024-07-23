@@ -56,6 +56,8 @@ public:
 	glm::vec2 getMapSize() const;
 	glm::vec2 getPlayerPosition() const;
 
+	glm::vec2 getGridFromPosition(const glm::vec2 grid) const;
+
 	void getPaths(glm::vec2 orgin, glm::vec2 dest, std::function<void(std::vector<AStarNode*>)> callback);
 	void calculatePath(glm::vec2 orgin, glm::vec2 dest, std::function<void(std::vector<AStarNode*>)> callback);
 

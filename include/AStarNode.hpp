@@ -6,7 +6,7 @@ class AStarNode
 {
 public:
     glm::vec2 pos; // Position of the node
-    float gCost, hCost, fCost; // Costs
+    float gCost, hCost; // Costs
     AStarNode* parent; // Pointer to the parent node
 
 public:
