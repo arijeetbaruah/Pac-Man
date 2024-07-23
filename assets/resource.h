@@ -2,8 +2,8 @@
 // Microsoft Visual C++ generated include file.
 // Used by PacMan.rc
 //
-#define IDI_ICON1                       101
-#define IDB_PNG1                        101
+#define IDI_ICON1                       "100"
+#define IDB_PNG1                        "101"
 
 // Next default values for new objects
 // 
