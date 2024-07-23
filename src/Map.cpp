@@ -37,13 +37,14 @@ void Map::load(const std::string& filename)
     for (size_t y = 0; y < map.size(); ++y) {
         std::vector<int> row;
         for (size_t x = 0; x < map[y].length(); ++x) {
-            std::shared_ptr<MapNode> mapNode;
             if (map[y][x] == '#') {
+                std::shared_ptr<MapNode> mapNode = NULL;
                 mapNode = std::make_shared<MapNode>(game, true, glm::vec2(x, y));
+                walls.push_back(mapNode);
+                game->getEntityManager()->addEntity(mapNode);
                 row.push_back(1);
             }
             else if (map[y][x] == 'P') {
-                mapNode = std::make_shared<MapNode>(game, false, glm::vec2(x, y));
                 playerPosition = glm::vec2(x * TILE_WIDTH + windowSize.x / 4, y * TILE_HEIGHT);
                 playerPos = glm::vec2(x, y);
                 row.push_back(0);
@@ -53,11 +54,8 @@ void Map::load(const std::string& filename)
                 ghostPos = glm::vec2(x, y);
             }
             else {
-                mapNode = std::make_shared<MapNode>(game, false, glm::vec2(x, y));
                 row.push_back(0);
             }
-            walls.push_back(mapNode);
-            game->getEntityManager()->addEntity(mapNode);
         }
         mapGrid.push_back(row);
     }
