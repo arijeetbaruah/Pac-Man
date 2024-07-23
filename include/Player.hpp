@@ -22,6 +22,8 @@ private:
 	std::map<MovementDirection, std::vector<sf::IntRect>> animations;
 	float animationTimer;
 	size_t animationIndex;
+
+	glm::vec2 previousPos;
 public:
 	Player(Game* game);
 
