@@ -4,7 +4,7 @@
 #include "../include/EntityManager.hpp"
 
 Game::Game(glm::vec2 aWindowSize, std::string name)
-	: window(sf::VideoMode(aWindowSize.x, aWindowSize.y), name, sf::Style::Fullscreen), isFullscreen(true)
+	: window(sf::VideoMode(aWindowSize.x, aWindowSize.y), name), isFullscreen(true)
 {
 	window.setFramerateLimit(144);
 

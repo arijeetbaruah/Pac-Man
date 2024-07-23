@@ -1,12 +1,17 @@
 #include "../include/Map.hpp"
-#include "../include/Game.hpp"
-#include "../include/EntityManager.hpp"
-#include "../include/AStar.hpp"
 
 #include <fstream>
 #include <vector>
 #include <string>
 #include <iostream>
+#include <functional>
+
+#include "../include/Game.hpp"
+#include "../include/EntityManager.hpp"
+#include "../include/AStar.hpp"
+#include "../include/AStarNode.hpp"
+
+#include <spdlog/spdlog.h>
 
 Map::Map(Game* aGame): game(aGame), mapSize(0,0), playerPosition(0, 0), aStar(std::make_shared<AStar>())
 {
@@ -27,27 +32,41 @@ void Map::load(const std::string& filename)
     mapSize.x = map.size();
     mapSize.y = map[0].length();
 
+    glm::vec2 ghostPos;
+    glm::vec2 playerPos;
+
     for (size_t y = 0; y < map.size(); ++y) {
         std::vector<int> row;
         for (size_t x = 0; x < map[y].length(); ++x) {
             std::shared_ptr<MapNode> mapNode;
             if (map[y][x] == '#') {
                 mapNode = std::make_shared<MapNode>(game, true, glm::vec2(x, y));
-                row.push_back(0);
+                row.push_back(1);
             }
             else if (map[y][x] == 'P') {
                 mapNode = std::make_shared<MapNode>(game, false, glm::vec2(x, y));
                 playerPosition = glm::vec2(x * TILE_WIDTH + windowSize.x / 4, y * TILE_HEIGHT);
-                row.push_back(1);
+                playerPos = glm::vec2(x, y);
+                row.push_back(0);
+            }
+            else if (map[y][x] == 'G')
+            {
+                ghostPos = glm::vec2(x, y);
             }
             else {
                 mapNode = std::make_shared<MapNode>(game, false, glm::vec2(x, y));
-                row.push_back(1);
+                row.push_back(0);
             }
             walls.push_back(mapNode);
             game->getEntityManager()->addEntity(mapNode);
         }
+        mapGrid.push_back(row);
     }
+
+
+    calculatePath(playerPos, ghostPos, [](std::vector<AStarNode*> path) {
+        spdlog::info("hi");
+    });
 }
 
 glm::vec2 Map::getMapSize() const
@@ -58,6 +77,18 @@ glm::vec2 Map::getMapSize() const
 glm::vec2 Map::getPlayerPosition() const
 {
     return playerPosition - glm::vec2(0, 2);
+}
+
+void Map::calculatePath(glm::vec2 orgin, glm::vec2 dest, std::function<void(std::vector<AStarNode*>)> callback)
+{
+    sf::Thread thread(std::bind(&Map::getPaths, this, orgin, dest, callback));
+    thread.launch();
+}
+
+void Map::getPaths(glm::vec2 origin, glm::vec2 dest, std::function<void(std::vector<AStarNode*>)> callback)
+{
+    std::vector<AStarNode*> path = aStar->findPath(origin, dest, mapGrid);
+    callback(path);
 }
 
 std::shared_ptr<AStar> Map::getAStar() const

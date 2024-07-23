@@ -1,16 +1,21 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 class AStarNode
 {
 public:
-    int x, y; // Position of the node
+    glm::vec2 pos; // Position of the node
     float gCost, hCost, fCost; // Costs
     AStarNode* parent; // Pointer to the parent node
 
 public:
-    AStarNode(int x, int y);
+    AStarNode(glm::vec2 pos, float g, float h, AStarNode* par = NULL);
 
-    void calculateFCost();
-    float calculateHCost(const AStarNode* endNode) const;
+    float calculateFCost() const;
+
+    bool operator>(const AStarNode* other) const {
+        return calculateFCost() > other->calculateFCost();
+    }
 };
 

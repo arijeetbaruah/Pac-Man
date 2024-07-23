@@ -9,6 +9,7 @@ const int TILE_HEIGHT = 35;
 
 class Game;
 class AStar;
+class AStarNode;
 
 class MapNode : public BaseEntity, public BaseCollider {
 private:
@@ -47,12 +48,16 @@ private:
 
 	std::shared_ptr<AStar> aStar;
 
+
 public:
 	Map(Game* game);
 	void load(const std::string& filename);
 
 	glm::vec2 getMapSize() const;
 	glm::vec2 getPlayerPosition() const;
+
+	void getPaths(glm::vec2 orgin, glm::vec2 dest, std::function<void(std::vector<AStarNode*>)> callback);
+	void calculatePath(glm::vec2 orgin, glm::vec2 dest, std::function<void(std::vector<AStarNode*>)> callback);
 
 	std::shared_ptr<AStar> getAStar() const;
 };
