@@ -2,7 +2,6 @@
 #include "../include/EntityManager.hpp"
 #include "../include/Game.hpp"
 #include "../include/Map.hpp"
-#include <Windows.h>
 #include <math.h>
 #include "../assets/resource.h"
 #include "../include/loadTextureFromResource.hpp"
