@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <functional>
 
 #include "../include/Game.hpp"
 #include "../include/EntityManager.hpp"

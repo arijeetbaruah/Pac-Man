@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <functional>
 #include <glm/glm.hpp>
+
 #include "./BaseEntity.hpp"
 #include "./BaseCollider.hpp"
 
