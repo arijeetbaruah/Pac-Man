@@ -1,43 +1,46 @@
 #include "../include/AStar.hpp"
-#include "../include/AStarNode.hpp"
 
 #include <queue>
 #include <unordered_set>
 #include <algorithm>
+#include <SFML/System/Vector2.hpp>
+#include <unordered_map>
 
-std::vector<AStarNode*> AStar::findPath(AStarNode* startNode, AStarNode* endNode, const std::vector<std::vector<int>>& grid)
+#include "../include/AStarNode.hpp"
+
+std::vector<AStarNode*> AStar::findPath(glm::vec2 start, glm::vec2 end, const std::vector<std::vector<int>>& grid)
 {
-    std::vector<AStarNode*> openList;
-    std::unordered_set<AStarNode*> closedList;
+    std::priority_queue<AStarNode*, std::vector<AStarNode*>, std::greater<AStarNode*>> openSet;
+    std::unordered_map<int, AStarNode*> allNodes;
 
-    openList.push_back(startNode);
+    auto hashNode = [](const glm::vec2& pos) { return pos.y * 10000 + pos.x; };
 
-    while (!openList.empty()) {
-        AStarNode* currentNode = *std::min_element(openList.begin(), openList.end(), [](AStarNode* a, AStarNode* b) {
-            return a->fCost < b->fCost;
-            });
+    AStarNode* startNode= new AStarNode(start, 0.0f, heuristic(start, end));
+    openSet.push(startNode);
+    allNodes[hashNode(start)] = startNode;
 
-        if (currentNode == endNode) {
-            return reconstructPath(endNode);
+    while (!openSet.empty()) {
+        AStarNode* currentNode = openSet.top();
+        openSet.pop();
+
+        if (currentNode->pos == end) {
+            return reconstructPath(allNodes[hashNode(currentNode->pos)]);
         }
 
-        openList.erase(std::remove(openList.begin(), openList.end(), currentNode), openList.end());
-        closedList.insert(currentNode);
+        for (const auto& neighborPos : getNeighbors(currentNode)) {
+            if (neighborPos.x < 0 || neighborPos.x >= grid[0].size() ||
+                neighborPos.y < 0 || neighborPos.y >= grid.size() ||
+                grid[neighborPos.y][neighborPos.x] == 1) {
+                continue;
+            }
 
-        for (AStarNode* neighbor : getNeighbors(currentNode, grid)) {
-            if (closedList.find(neighbor) != closedList.end()) continue;
+            float tentativeGCost = currentNode->gCost + 1.0f;
+            int neighborHash = hashNode(neighborPos);
 
-            float tentativeGCost = currentNode->gCost + getDistance(currentNode, neighbor);
-
-            if (tentativeGCost < neighbor->gCost || std::find(openList.begin(), openList.end(), neighbor) == openList.end()) {
-                neighbor->gCost = tentativeGCost;
-                neighbor->hCost = neighbor->calculateHCost(endNode);
-                neighbor->calculateFCost();
-                neighbor->parent = currentNode;
-
-                if (std::find(openList.begin(), openList.end(), neighbor) == openList.end()) {
-                    openList.push_back(neighbor);
-                }
+            if (allNodes.find(neighborHash) == allNodes.end() || tentativeGCost < allNodes[neighborHash]->gCost) {
+                AStarNode* neighborNode = new AStarNode(neighborPos, tentativeGCost, heuristic(neighborPos, end), allNodes[hashNode(currentNode->pos)]);
+                allNodes[neighborHash] = neighborNode;
+                openSet.push(neighborNode);
             }
         }
     }
@@ -48,33 +51,33 @@ std::vector<AStarNode*> AStar::findPath(AStarNode* startNode, AStarNode* endNode
 std::vector<AStarNode*> AStar::reconstructPath(AStarNode* endNode) const
 {
     std::vector<AStarNode*> path;
-    for (AStarNode* node = endNode; node != nullptr; node = node->parent) {
-        path.push_back(node);
+    AStarNode* current = endNode;
+    while (current) {
+        path.push_back(current);
+        current = current->parent;
     }
     std::reverse(path.begin(), path.end());
     return path;
 }
 
-std::vector<AStarNode*> AStar::getNeighbors(AStarNode* node, const std::vector<std::vector<int>>& grid)
+std::vector<glm::vec2> AStar::getNeighbors(AStarNode* node)
 {
-    std::vector<AStarNode*> neighbors;
+    std::vector<glm::vec2> neighbors;
 
-    int dx[] = { -1, 1, 0, 0 };
-    int dy[] = { 0, 0, -1, 1 };
-
-    for (int i = 0; i < 4; ++i) {
-        int newX = node->x + dx[i];
-        int newY = node->y + dy[i];
-
-        if (newX >= 0 && newX < grid.size() && newY >= 0 && newY < grid[0].size() && grid[newX][newY] == 0) {
-            neighbors.push_back(new AStarNode(newX, newY));
-        }
-    }
+    neighbors.push_back({ node->pos.x - 1, node->pos.y });
+    neighbors.push_back({ node->pos.x + 1, node->pos.y });
+    neighbors.push_back({ node->pos.x, node->pos.y - 1 });
+    neighbors.push_back({ node->pos.x, node->pos.y + 1 });
 
     return neighbors;
 }
 
 float AStar::getDistance(const AStarNode* a, const AStarNode* b) const
 {
-    return std::sqrt(std::pow(a->x - b->x, 2) + std::pow(a->y - b->y, 2));
+    return std::sqrt(std::pow(a->pos.x - b->pos.x, 2) + std::pow(a->pos.y - b->pos.y, 2));
+}
+
+float AStar::heuristic(const glm::vec2& a, const glm::vec2& b)
+{
+    return std::abs(a.x - b.x) + std::abs(a.y - b.y);
 }
