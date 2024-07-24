@@ -1,27 +1,26 @@
 #include "../include/Game.hpp"
-#include "../include/Map.hpp"
 #include "../include/Player.hpp"
 #include "../include/EntityManager.hpp"
+#include "../include/GameStateMachine.hpp"
 
 Game::Game(glm::vec2 aWindowSize, std::string name)
-	: window(sf::VideoMode(aWindowSize.x, aWindowSize.y), name), isFullscreen(true)
+	: window(sf::VideoMode(aWindowSize.x, aWindowSize.y), name),
+    isFullscreen(true)
 {
 	window.setFramerateLimit(144);
 
     entityManager = std::make_shared<EntityManager>(this);
-
-    map = std::make_shared<Map>(this);
-    map->load("../map/map.txt");
-
-    player = std::make_shared<Player>(this);
-    std::shared_ptr<BaseEntity> playerBE = std::dynamic_pointer_cast<BaseEntity>(player);
-    entityManager->addEntity(std::dynamic_pointer_cast<BaseEntity>(playerBE));
-    player->setPosition(map->getPlayerPosition());
+    gameStateMachine = std::make_shared<GameStateMachine>(this);
 }
 
 std::shared_ptr<EntityManager> Game::getEntityManager() const
 {
     return entityManager;
+}
+
+std::shared_ptr<GameStateMachine> Game::getStateMachine() const
+{
+    return gameStateMachine;
 }
 
 void Game::run()
