@@ -3,7 +3,9 @@
 
 int main()
 {
-    Game* game = new Game({ 1920u, 1080u }, "Pac-Man");
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+
+    Game* game = new Game({ desktop.width, desktop.height }, "Pac-Man");
     game->run();
     delete game;
 }

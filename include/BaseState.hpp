@@ -13,6 +13,7 @@ public:
 	virtual void onEntry() = 0;
 	virtual void handleInput(sf::Event& event) = 0;
 	virtual void onUpdate(sf::Time& elapsed) = 0;
+	virtual void onRender() = 0;
 	virtual void onExit() = 0;
 };
 

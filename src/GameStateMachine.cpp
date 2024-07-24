@@ -6,6 +6,13 @@
 GameStateMachine::GameStateMachine(Game* aGame): game(aGame), currentState(0)
 {
 	gameGameState = std::make_shared<GameGameState>(game);
+
+	setState(gameGameState);
+}
+
+std::shared_ptr<BaseState> GameStateMachine::getState() const
+{
+	return currentState;
 }
 
 void GameStateMachine::handleInput(sf::Event& event)
@@ -24,7 +31,15 @@ void GameStateMachine::update(sf::Time& elapsed)
 	}
 }
 
-void GameStateMachine::SetState(std::shared_ptr<BaseState> state)
+void GameStateMachine::render()
+{
+	if (currentState != NULL)
+	{
+		currentState->onRender();
+	}
+}
+
+void GameStateMachine::setState(std::shared_ptr<BaseState> state)
 {
 	if (currentState != NULL)
 	{

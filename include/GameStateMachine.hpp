@@ -20,7 +20,10 @@ public:
 public:
 	GameStateMachine(Game* game);
 
+	std::shared_ptr<BaseState> getState() const;
+
 	void handleInput(sf::Event& event);
 	void update(sf::Time& elapsed);
-	void SetState(std::shared_ptr<BaseState> state);
+	void render();
+	void setState(std::shared_ptr<BaseState> state);
 };
