@@ -23,6 +23,7 @@ public:
 	void onEntry() override;
 	void handleInput(sf::Event& event) override;
 	void onUpdate(sf::Time& elapsed) override;
+	void onRender() override;
 	void onExit() override;
 };
 

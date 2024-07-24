@@ -4,7 +4,7 @@
 #include "../include/GameStateMachine.hpp"
 
 Game::Game(glm::vec2 aWindowSize, std::string name)
-	: window(sf::VideoMode(aWindowSize.x, aWindowSize.y), name),
+	: window(sf::VideoMode(aWindowSize.x, aWindowSize.y), name, sf::Style::Fullscreen),
     isFullscreen(true)
 {
 	window.setFramerateLimit(144);
@@ -43,11 +43,14 @@ void Game::run()
                 }
             }
             entityManager->handleInput(event);
+            gameStateMachine->handleInput(event);
         }
 
         entityManager->update(elapsed);
+        gameStateMachine->update(elapsed);
 
         window.clear();
+        gameStateMachine->render();
         entityManager->render();
         window.display();
     }

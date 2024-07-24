@@ -30,6 +30,12 @@ void GameGameState::handleInput(sf::Event& event)
 
 void GameGameState::onUpdate(sf::Time& elapsed)
 {
+    
+}
+
+void GameGameState::onRender()
+{
+    map->render();
 }
 
 void GameGameState::onExit()

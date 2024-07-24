@@ -2,6 +2,8 @@
 #include "../include/EntityManager.hpp"
 #include "../include/Game.hpp"
 #include "../include/Map.hpp"
+#include "../include/GameGameState.hpp"
+#include "../include/GameStateMachine.hpp"
 #include <math.h>
 #include "../assets/resource.h"
 #include "../include/loadTextureFromResource.hpp"
@@ -36,6 +38,11 @@ void Player::update(sf::Time& elapsed)
 	glm::vec2 dir = getForward();
 
 	glm::vec2 pos = getPosition() + dir * elapsed.asSeconds() * PLAYER_SPEED;
+
+	std::shared_ptr<GameGameState> gameGameState = std::dynamic_pointer_cast<GameGameState>(game->getStateMachine()->getState());
+	glm::vec2 gridPos = gameGameState->getMap()->getGridFromPosition(pos);
+	spdlog::info("({}, {})", gridPos.x, gridPos.y);
+
 	setPosition(pos);
 }
 

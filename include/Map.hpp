@@ -13,31 +13,26 @@ class Game;
 class AStar;
 class AStarNode;
 
-class MapNode : public BaseEntity, public BaseCollider {
+class MapNode {
 private:
 	Game* game;
+
 	sf::RectangleShape sprite;
-	glm::vec2 position;
+
+	glm::vec2 gridPosition;
+
+public:
+	bool isWall;
 
 public:
 	MapNode(Game* game, bool isWall, glm::vec2 position);
 
 	glm::vec2 getGridPosition() const;
 
-	// Inherited via BaseEntity
-	void handleInput(sf::Event& event) override;
-	void update(sf::Time& elapsed) override;
-	void render() override;
-
-	// Inherited via BaseCollider
-	void onCollision(std::shared_ptr<BaseCollider> entity) override;
-	sf::FloatRect getBounds() override;
-
-public:
-
-	void setPosition(const float x, const float y) override;
-	void setPosition(const glm::vec2 position) override;
-	glm::vec2 getPosition() const override;
+	void render();
+	void setPosition(const float x, const float y);
+	void setPosition(const glm::vec2 position);
+	glm::vec2 getPosition() const;
 };
 
 class Map
@@ -46,7 +41,7 @@ private:
 	Game* game;
 
 	std::vector<std::string> map;
-	std::vector<std::shared_ptr<MapNode>> walls;
+	std::vector<std::vector<std::shared_ptr<MapNode>>> walls;
 	std::vector<std::vector<int>> mapGrid;
 
 	glm::vec2 mapSize;
@@ -68,5 +63,7 @@ public:
 	void calculatePath(glm::vec2 orgin, glm::vec2 dest, std::function<void(std::vector<AStarNode*>)> callback);
 
 	std::shared_ptr<AStar> getAStar() const;
+
+	void render();
 };
 
