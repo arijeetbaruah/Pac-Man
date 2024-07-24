@@ -16,7 +16,7 @@ Player::Player(Game* game) : BaseEntity(game), direction(MovementDirection::RIGH
 	initializeAnimation();
 
 	sprite.setTextureRect(animations[direction][animationIndex]);
-	sprite.setScale(0.9f, 0.9f);
+	sprite.setScale(0.8f, 0.8f);
 }
 
 void Player::handleInput(sf::Event& event)
@@ -33,22 +33,7 @@ void Player::update(sf::Time& elapsed)
 		animationTimer = 0;
 	}
 
-	glm::vec2 dir;
-	switch (direction)
-	{
-	case UP:
-		dir = glm::vec2(0, 1);
-		break;
-	case DOWN:
-		dir = glm::vec2(0, -1);
-		break;
-	case LEFT:
-		dir = glm::vec2(-1, 0);
-		break;
-	case RIGHT:
-		dir = glm::vec2(1, 0);
-		break;
-	}
+	glm::vec2 dir = getForward();
 
 	glm::vec2 pos = getPosition() + dir * elapsed.asSeconds() * PLAYER_SPEED;
 	setPosition(pos);
@@ -61,11 +46,7 @@ void Player::render()
 
 void Player::onCollision(std::shared_ptr<BaseCollider> entity)
 {
-	std::shared_ptr<MapNode> mapNode = std::reinterpret_pointer_cast<MapNode>(entity);
-	if (mapNode != NULL)
-	{
-		setPosition(previousPos);
-	}
+	
 }
 
 sf::FloatRect Player::getBounds()
@@ -106,4 +87,26 @@ glm::vec2 Player::getPosition() const
 {
 	sf::Vector2f position = sprite.getPosition();
 	return glm::vec2(position.x, position.y);
+}
+
+glm::vec2 Player::getForward() const
+{
+	glm::vec2 dir = glm::vec2(0, 0);
+	switch (direction)
+	{
+	case UP:
+		dir = glm::vec2(0, 1);
+		break;
+	case DOWN:
+		dir = glm::vec2(0, -1);
+		break;
+	case LEFT:
+		dir = glm::vec2(-1, 0);
+		break;
+	case RIGHT:
+		dir = glm::vec2(1, 0);
+		break;
+	}
+
+	return dir;
 }

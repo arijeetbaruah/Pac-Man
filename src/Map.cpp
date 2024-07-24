@@ -45,7 +45,7 @@ void Map::load(const std::string& filename)
                 row.push_back(1);
             }
             else if (map[y][x] == 'P') {
-                playerPosition = glm::vec2(x * TILE_WIDTH + windowSize.x / 4, y * TILE_HEIGHT);
+                playerPosition = glm::vec2(x * TILE_WIDTH + windowSize.x / 4, y * TILE_HEIGHT + 3);
                 playerPos = glm::vec2(x, y);
                 row.push_back(0);
             }
@@ -61,9 +61,9 @@ void Map::load(const std::string& filename)
     }
 
 
-    calculatePath(playerPos, ghostPos, [](std::vector<AStarNode*> path) {
+    /*calculatePath(playerPos, ghostPos, [](std::vector<AStarNode*> path) {
         spdlog::info("hi");
-    });
+    });*/
 }
 
 glm::vec2 Map::getMapSize() const
